@@ -279,9 +279,6 @@
     position:sticky;
     top:0;
     min-height:100vh;
-    display:flex;
-    align-items:flex-end;
-    padding:140px 5vw 90px;
     overflow:hidden;
   }
 
@@ -316,10 +313,42 @@
     -webkit-appearance:none;
   }
 
+  /* Warm directional wash: quieter behind left/bottom text, lighter
+     toward the facial focal point (center-right). Brand brown only. */
   .hero-overlay{
     position:absolute; inset:0;
     z-index:1;
-    background:linear-gradient(180deg, rgba(42,32,25,0.15) 0%, rgba(42,32,25,0.05) 40%, rgba(42,32,25,0.55) 100%);
+    background:
+      linear-gradient(90deg,
+        rgba(42,32,25,0.58) 0%,
+        rgba(42,32,25,0.28) 34%,
+        rgba(42,32,25,0.08) 58%,
+        rgba(42,32,25,0.06) 100%),
+      linear-gradient(180deg,
+        rgba(42,32,25,0.22) 0%,
+        rgba(42,32,25,0.06) 40%,
+        rgba(42,32,25,0.52) 100%);
+  }
+
+  /* Same horizontal rail as .nav / .section-inner: 8vw gutters + 1280px max. */
+  .hero-inner{
+    position:absolute;
+    z-index:2;
+    top:0;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1280px, calc(100% - 16vw));
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding:140px 0 90px;
+    pointer-events:none;
+  }
+  .hero-inner a,
+  .hero-inner .btn,
+  .hero-inner .hero-pill{
+    pointer-events:auto;
   }
 
   .hero-content{
@@ -327,13 +356,12 @@
     z-index:2;
     width:100%;
     display:flex;
-    justify-content:space-between;
+    justify-content:flex-start;
     align-items:flex-end;
-    gap:40px;
   }
 
   .hero-text{
-    max-width:620px;
+    max-width:34rem;
   }
   .hero-top-group,
   .hero-bottom-group{
@@ -342,14 +370,13 @@
 
   /* Secondary line that reveals mid-scroll, kept clear of the video's
      center (where the model's face sits) by living in the bottom-right
-     quadrant — over the lighter linen area of the frame — with breathing
-     room from both the edge and the bottle in the shot. */
+     of the shared content rail. */
   .hero-reveal{
     position:absolute;
     bottom:10vh;
-    right:8vw;
+    right:0;
     z-index:2;
-    max-width:420px;
+    max-width:min(420px, 46%);
     pointer-events:none;
   }
 
@@ -395,7 +422,7 @@
   }
 
   @media (max-width:880px){
-    .hero-reveal{ bottom:15vh; right:6vw; max-width:64vw; }
+    .hero-reveal{ bottom:15vh; max-width:64%; }
     .hero-reveal-inner{ padding:22px 24px 22px 38px; -webkit-mask-image:radial-gradient(circle at right bottom, black 60%, transparent 100%); mask-image:radial-gradient(circle at right bottom, black 60%, transparent 100%); }
   }
 
@@ -423,7 +450,7 @@
   }
 
   .hero p{
-    color:rgba(246,238,226,0.88);
+    color:rgba(246,238,226,0.92);
     font-size:1.1rem;
     max-width:460px;
     margin-bottom:34px;
@@ -454,7 +481,7 @@
   .hero-pill{
     position:absolute;
     top:130px;
-    right:5vw;
+    right:0;
     z-index:2;
     padding:10px 18px;
     color:var(--cream);
@@ -472,13 +499,32 @@
   }
 
   @media (max-width:880px){
-    .hero{ flex-direction:column; align-items:flex-start; padding:0; }
+    /* Shared 6vw gutters via rail width — matches .section at this breakpoint. */
+    .hero-inner{
+      width:min(1280px, calc(100% - 12vw));
+      padding:0;
+      display:block;
+      transform:translateX(-50%);
+    }
+
+    /* Bottom-weighted wash for paragraph/CTAs; mid-frame stays lighter for the face. */
+    .hero-overlay{
+      background:
+        linear-gradient(180deg,
+          rgba(42,32,25,0.38) 0%,
+          rgba(42,32,25,0.10) 32%,
+          rgba(42,32,25,0.08) 52%,
+          rgba(42,32,25,0.62) 100%),
+        linear-gradient(90deg,
+          rgba(42,32,25,0.28) 0%,
+          rgba(42,32,25,0.06) 55%,
+          transparent 100%);
+    }
+
     /* hero-content and hero-text are taken out of the positioning chain
        (position:static) so their descendants' absolute positioning skips
-       past them and resolves directly against .hero — the same pattern
-       already used by .hero-pill and .hero-reveal. This is what lets the
-       top and bottom groups live at opposite ends of the screen instead
-       of stacking together as one block. */
+       past them and resolves against .hero-inner — keeping top and bottom
+       groups at opposite ends of the rail with the face clear in between. */
     .hero-content{ position:static; flex-direction:column; align-items:flex-start; padding:0; }
     .hero-text{ position:static; max-width:none; }
 
@@ -486,33 +532,27 @@
     .hero-top-group{
       position:absolute;
       top:100px;
-      left:6vw;
-      right:6vw;
+      left:0;
+      right:0;
     }
     .hero-eyebrow{ margin-bottom:10px; }
     .hero h1{ margin-bottom:0; }
 
-    /* Bottom group: paragraph + actions, anchored to the bottom — this
-       is what leaves the large clear gap in the middle of the frame for
-       the model's face. */
+    /* Bottom group: paragraph + actions — clear mid-frame for the face. */
     .hero-bottom-group{
       position:absolute;
       bottom:20px;
-      left:6vw;
-      right:6vw;
+      left:0;
+      right:0;
     }
     .hero p{ font-size:0.9rem; max-width:90%; line-height:1.4; margin-bottom:20px; }
-    /* Back to a simple left-right row now that the pill (which this
-       stacking was built around) is hidden on mobile entirely. */
     .hero-actions{
       width:100%;
       justify-content:space-between;
       gap:14px;
     }
 
-    /* Hidden on mobile entirely — the initial frame is cleaner without
-       it, and the center of the frame stays clear of any extra chrome.
-       Desktop is untouched: the pill still shows there. */
+    /* Hidden on mobile — keeps the initial frame and face clear. */
     .hero-pill{
       display:none;
     }
@@ -789,16 +829,20 @@
   .result-tag{ font-size:0.72rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--brown-mid); }
   .result-label{ padding:0 4px; margin-top:10px; font-weight:700; font-size:0.95rem; }
   .results-footer{
-    display:grid;
-    grid-template-columns:minmax(0, 1fr) minmax(200px, 280px);
-    gap:40px 48px;
-    align-items:start;
-    margin-top:56px;
+    margin:56px auto 0;
+    max-width:440px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:0;
   }
   .results-cta{
     margin:0;
-    text-align:left;
-    max-width:480px;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
   }
   .results-cta-prompt{
     font-family:'Bricolage Grotesque', sans-serif;
@@ -809,27 +853,25 @@
     color:var(--brown-dark);
   }
   .results-cta-support{
-    margin:10px 0 24px;
-    max-width:460px;
+    margin:10px 0 0;
+    max-width:400px;
     font-size:0.92rem;
     color:var(--brown-mid);
-    line-height:1.5;
+    line-height:1.55;
   }
   .results-cta-btn{
-    width:170px;
-    height:46px;
-    padding:0 22px;
+    margin-top:24px;
+    padding:13px 26px;
     justify-content:center;
     font-size:0.9rem;
   }
   .disclaimer{
-    margin:0;
+    margin:28px 0 0;
+    max-width:360px;
     font-size:0.78rem;
     color:var(--brown-mid);
-    text-align:right;
+    text-align:center;
     line-height:1.5;
-    max-width:280px;
-    justify-self:end;
   }
 
   /* Staggered "presentation" of the three result cards: each fades and
@@ -847,24 +889,7 @@
 
   @media (max-width:880px){
     .results-grid{ grid-template-columns:1fr; }
-  .disclaimer{
-    max-width:220px;
-  }
-  }
-
-  @media (max-width:560px){
-    .results-footer{
-    grid-template-columns:1fr;
-    gap:32px;
-  }
-    .results-cta{
-    text-align:center;
-      justify-self:center;
-  }
-    .disclaimer{
-      text-align:center;
-      justify-self:center;
-    }
+    .results-footer{ margin-top:48px; max-width:400px; }
   }
   /* ---------- Pricing ---------- */
   .price-explain{
@@ -895,19 +920,25 @@
   .price-card .p-desc{ font-size:0.85rem; color:var(--brown-mid); margin-bottom:22px; min-height:44px; }
   .price-card .p-amount{ font-family:'Bricolage Grotesque', sans-serif; font-size:1.9rem; font-weight:800; font-variant-numeric:tabular-nums; }
   .price-card .p-from{ font-size:0.75rem; color:var(--brown-mid); text-transform:uppercase; letter-spacing:0.06em; }
-  .price-note{ text-align:right; margin-top:34px; color:var(--brown-mid); font-size:0.9rem; }
-  .price-note-cta{
-    margin-top:34px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
+  .price-note{
+    margin:0;
+    max-width:360px;
+    text-align:center;
+    color:var(--brown-mid);
+    font-size:0.9rem;
+    line-height:1.5;
   }
-  .price-note-cta .price-note{ margin-top:0; }
+  .price-note-cta{
+    margin:40px auto 0;
+    max-width:440px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:16px;
+  }
   .price-cta-btn{
-    width:170px;
-    height:46px;
-    padding:0 22px;
+    padding:13px 26px;
     justify-content:center;
     font-size:0.9rem;
   }
@@ -917,10 +948,7 @@
   }
   @media (max-width:560px){
     .price-grid{ grid-template-columns:1fr; }
-    .price-note-cta{
-    flex-direction:column;
-  }
-  .price-note{text-align: center; }
+    .price-note-cta{ margin-top:34px; max-width:400px; }
   }
 
   /* ---------- FAQ ---------- */
@@ -1123,28 +1151,30 @@
       </video>
     </div>
     <div class="hero-overlay"></div>
-    <div class="hero-pill glass-dark">
-      <span class="dot"></span> Now accepting new clients
-    </div>
-    <div class="hero-content">
-      <div class="hero-text">
-        <div class="hero-top-group">
-          <div class="eyebrow hero-eyebrow">Physician-Led Aesthetic Studio</div>
-          <h1>Look like you<br>slept eight hours.</h1>
-        </div>
-        <div class="hero-bottom-group">
-          <p>Treatments designed to enhance what's already there — not replace it. Board-certified care, unhurried consultations, and results no one has to guess at.</p>
-          <div class="hero-actions">
-            <a href="#contact" class="btn btn-primary">Book a Consultation</a>
-            <a href="#treatments" class="hero-cta-link">View Treatments →</a>
+    <div class="hero-inner">
+      <div class="hero-pill glass-dark">
+        <span class="dot"></span> Now accepting new clients
+      </div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-top-group">
+            <div class="eyebrow hero-eyebrow">Physician-Led Aesthetic Studio</div>
+            <h1>Look like you<br>slept eight hours.</h1>
+          </div>
+          <div class="hero-bottom-group">
+            <p>Treatments designed to enhance what's already there — not replace it. Board-certified care, unhurried consultations, and results no one has to guess at.</p>
+            <div class="hero-actions">
+              <a href="#contact" class="btn btn-primary">Book a Consultation</a>
+              <a href="#treatments" class="hero-cta-link">View Treatments →</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="hero-reveal">
-      <div class="hero-reveal-inner" id="heroReveal">
-        <div class="hero-reveal-label">Our Philosophy</div>
-        <div class="hero-reveal-title">Subtle enhancement,<br>never overcorrection.</div>
+      <div class="hero-reveal">
+        <div class="hero-reveal-inner" id="heroReveal">
+          <div class="hero-reveal-label">Our Philosophy</div>
+          <div class="hero-reveal-title">Subtle enhancement,<br>never overcorrection.</div>
+        </div>
       </div>
     </div>
   </header>
@@ -1336,7 +1366,7 @@
         <div class="p-amount">$95</div>
       </div>
     </div>
-    <div class="price-note-cta">
+    <div class="price-note-cta reveal">
       <a href="#contact" class="btn btn-primary price-cta-btn">Book a Consultation</a>
       <p class="price-note">Exact pricing is confirmed during your consultation, based on your goals.</p>
     </div>
